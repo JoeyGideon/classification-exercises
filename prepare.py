@@ -39,29 +39,41 @@ def prep_titanic(df):
     # Return the updated DataFrame
     return df
 
-import pandas as pd
 
-def prep_telco(raw_telco_data):
-    # Drop any unnecessary, unhelpful, or duplicated columns
-    df_telco = raw_telco_data.drop(['payment_type_id', 'internet_service_type_id', 'contract_type_id', 'customer_id'], axis=1)
+# Prepare function
+def prep_telco(df):
+    # Drop duplicate rows
+    df = df.drop_duplicates()
 
-    # Get the categorical columns
+    # Replace blank values with NaN
+    df = df.replace("", pd.np.nan)
+
+    # Replace "No internet service" with "No" for relevant columns
+    cols = ['online_security', 'online_backup', 'device_protection', 'tech_support', 'streaming_tv', 'streaming_movies']
+    for col in cols:
+        df[col] = df[col].replace("No internet service", "No")
+
+    # Replace binary columns with 1 (Yes) and 0 (No)
+    binary_cols = ['partner', 'dependents', 'phone_service', 'multiple_lines', 'online_security', 'online_backup', 'device_protection', 'tech_support', 'streaming_tv', 'streaming_movies', 'paperless_billing', 'churn']
+    for col in binary_cols:
+        df[col] = df[col].replace({"Yes": 1, "No": 0})
+
+    # Convert total_charges to a numeric data type
+    df['total_charges'] = pd.to_numeric(df['total_charges'], errors='coerce')
+    
+    # Encode the categorical columns
     cat_cols = ['gender', 'partner', 'dependents', 'phone_service', 'multiple_lines',
-                'online_security', 'online_backup', 'device_protection', 'tech_support',
-                'streaming_tv', 'streaming_movies', 'paperless_billing', 'churn',
-                'contract_type', 'internet_service_type', 'payment_type']
+            'online_security', 'online_backup', 'device_protection', 'tech_support',
+            'streaming_tv', 'streaming_movies', 'paperless_billing',
+            'contract_type', 'internet_service_type', 'payment_type']
 
-    # Use get_dummies() to create dummy variables
-    dummy_df = pd.get_dummies(df_telco[cat_cols], drop_first=True)
+    dummy_df = pd.get_dummies(df[cat_cols], drop_first=True)
 
-    # Concatenate the dummy variables onto the original DataFrame
-    df_telco = pd.concat([df_telco, dummy_df], axis=1)
+    df = pd.concat([df, dummy_df], axis=1)
 
-    # Drop the original categorical columns
-    df_telco.drop(cat_cols, axis=1, inplace=True)
+    df.drop(cat_cols, axis=1, inplace=True)
 
-    # Return the cleaned and encoded DataFrame
-    return df_telco
+    return df
 
 
 
