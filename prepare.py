@@ -3,11 +3,11 @@ import pandas as pd
 def prep_iris(df):
     '''
     This function accepts the untransformed iris data as a pandas DataFrame and applies the following transformations:
-    - Drops the species_id and measurement_id columns
+    - Drops the species_id column
     - Renames the species_name column to species
     - Creates dummy variables of the species column and concatenates them onto the original DataFrame
     '''
-    # Drop the species_id and measurement_id columns from the DataFrame
+    # Drop the species_id column from the DataFrame
     df = df.drop(columns=['species_id'])
 
     # Rename the species_name column to species
