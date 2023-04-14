@@ -22,6 +22,7 @@ def prep_iris(df):
     return df
 
 def prep_titanic(df):
+
     # Drop unnecessary columns
     df = df.drop(columns=['deck', 'embark_town', 'survived', 'class'])
     
