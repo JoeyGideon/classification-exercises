@@ -24,7 +24,7 @@ def prep_iris(df):
 def prep_titanic(df):
 
     # Drop unnecessary columns
-    df = df.drop(columns=['deck', 'embark_town', 'survived', 'class'])
+    df = df.drop(columns=['deck', 'embark_town', 'class'])
     
     # Fill missing values
     df['age'] = df['age'].fillna(df['age'].median())
@@ -102,4 +102,6 @@ def split_data(df, target):
     y_test = test[target]
 
     return X_train, X_validate, X_test, y_train, y_validate, y_test
+
+
 
