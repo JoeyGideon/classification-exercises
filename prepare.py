@@ -21,25 +21,27 @@ def prep_iris(df):
 
     return df
 
-def prep_titanic(df):
+def prep_titanic(df_titanic):
 
     # Drop unnecessary columns
-    df = df.drop(columns=['deck', 'embark_town', 'class'])
-    
+    df_titanic = df_titanic.drop(columns=['deck', 'embark_town', 'class'])
     # Fill missing values
-    df['age'] = df['age'].fillna(df['age'].median())
-    df['embarked'] = df['embarked'].fillna(df['embarked'].mode()[0])
+    df_titanic['age'] = df_titanic['age'].fillna(df_titanic['age'].median())
+    df_titanic['embarked'] = df_titanic['embarked'].fillna(df_titanic['embarked'].mode()[0])
     
     # Encode categorical columns
-    df['sex'] = pd.get_dummies(df['sex'], drop_first=True)
-    df = pd.concat([df,pd.get_dummies(df['embarked'], prefix='embarked', drop_first=True)], axis=1)
+    df_titanic['sex'] = pd.get_dummies(df_titanic['sex'], drop_first=True)
+    df_titanic = pd.concat([df_titanic,pd.get_dummies(df_titanic['embarked'], prefix='embarked', drop_first=True)], axis=1)
+
+    binary_cols = ['sex']
+    for col in binary_cols:
+        df_titanic[col] = df_titanic[col].replace({'male': 1, 'female': 0})
     
     # Drop original categorical columns that have been encoded
-    df = df.drop(columns=['embarked'])
+    df_titanic = df_titanic.drop(columns=['embarked'])
     
     # Return the updated DataFrame
-    return df
-
+    return df_titanic
 
 # Prepare function
 def prep_telco(df):
